@@ -28,7 +28,7 @@ services:
       NETWORK_NAME: "test_backend"
       REGISTRY_USERNAME: "username"
       REGISTRY_PASSWORD: "password"
-      REGISTRY_SERVER: "casplatformregistry.azurecr.io"
+      REGISTRY_SERVER: "private"
       STATSD_HOST: graphite
       STATSD_PORT: 8125
       STATSD_PREFIX: tasks.
