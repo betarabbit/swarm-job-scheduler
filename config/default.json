@@ -8,7 +8,7 @@
   "jobs": [
     {
       "name": "Ping Redis",
-      "image": "casplatformregistry.azurecr.io/busybox",
+      "image": "private/busybox",
       "registry": {
         "username": "REGISTRY_USERNAME",
         "password": "REGISTRY_PASSWORD",
