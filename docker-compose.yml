@@ -1,0 +1,58 @@
+version: "3.6"
+
+services:
+  redis:
+    image: redis
+    networks:
+      - backend
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "10"
+
+  scheduler:
+    image: scheduler:latest
+    networks:
+      - backend
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+      - type: bind
+        source: /var/lib/docker/containers
+        target: /var/lib/docker/containers
+    environment:
+      NODE_ENV: dev
+      REDIS: "redis://redis:6379"
+      NETWORK_NAME: "test_backend"
+      REGISTRY_USERNAME: "username"
+      REGISTRY_PASSWORD: "password"
+      REGISTRY_SERVER: "casplatformregistry.azurecr.io"
+      STATSD_HOST: graphite
+      STATSD_PORT: 8125
+      STATSD_PREFIX: tasks.
+    configs:
+      - source: task_config
+        target: /opt/scheduler/config/default.json
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "10"
+    deploy:
+      mode: global
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+networks:
+  backend:
+    attachable: true
+
+configs:
+  task_config:
+    file: ./config/default.json
+    

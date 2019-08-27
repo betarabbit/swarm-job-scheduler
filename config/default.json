@@ -1,0 +1,25 @@
+{
+  "redis": "REDIS",
+  "statsd": {
+    "host": "STATSD_HOST",
+    "port": "STATSD_PORT",
+    "prefix": "STATSD_PREFIX"
+  },
+  "jobs": [
+    {
+      "name": "Ping Redis",
+      "image": "casplatformregistry.azurecr.io/busybox",
+      "registry": {
+        "username": "REGISTRY_USERNAME",
+        "password": "REGISTRY_PASSWORD",
+        "serveraddress": "REGISTRY_SERVER"
+      },
+      "cmd": [ "ping", "redis", "-c", "1" ],
+      "networkName": "NETWORK_NAME",
+      "location": "manager",
+      "repeat": {
+        "cron": "* * * * *"
+      }
+    }
+  ]
+}
