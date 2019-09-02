@@ -1,10 +1,6 @@
 {
   "redis": "REDIS",
-  "statsd": {
-    "host": "STATSD_HOST",
-    "port": "STATSD_PORT",
-    "prefix": "STATSD_PREFIX"
-  },
+  "graphite": "GRAPHITE",
   "jobs": [
     {
       "name": "Ping Redis",

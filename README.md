@@ -19,7 +19,7 @@ Add job configuration in `config/default.json`.
 ```json
 {
     "name": "Ping Redis",
-    "image": "casplatformregistry.azurecr.io/busybox",
+    "image": "private/busybox",
     "registry": {
     "username": "REGISTRY_USERNAME",
     "password": "REGISTRY_PASSWORD",
@@ -54,9 +54,7 @@ scheduler:
       REGISTRY_USERNAME: "PALCEHOLDER_REGISTRY_USERNAME"
       REGISTRY_PASSWORD: "PALCEHOLDER_REGISTRY_PASSWORD"
       REGISTRY_SERVER: "PALCEHOLDER_REGISTRY_SERVER"
-      STATSD_HOST: graphite
-      STATSD_PORT: 8125
-      STATSD_PREFIX: tasks.
+      GRAPHITE: "plaintext://graphite:2003/"
     configs:
       - source: task_config
         target: /opt/scheduler/config/default.json

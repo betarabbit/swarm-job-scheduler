@@ -47,7 +47,7 @@
   "dependencies": {
     "bull": "^3.10.0",
     "dockerode": "^2.5.8",
-    "hot-shots": "^6.3.0",
+    "graphite": "^0.1.4",
     "winston": "^3.2.1"
   }
 }

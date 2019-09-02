@@ -1,16 +1,13 @@
 const Docker = require('dockerode');
-const StatsD = require('hot-shots');
+const Graphite = require('graphite');
+const { performance } = require('perf_hooks');
 
-const { statsd } = require('../config');
+const { graphite } = require('../config');
 const logger = require('./logger');
 
 const docker = new Docker();
 
-const client = new StatsD({
-  errorHandler: error => logger.error('Something went wrong!', { error }),
-  mock: process.env.NODE_ENV !== 'production',
-  ...statsd
-});
+const client = Graphite.createClient(graphite);
 
 module.exports = async function process(job) {
   const { name, image, registry, cmd, networkName } = job.data;
@@ -39,10 +36,21 @@ module.exports = async function process(job) {
         }
       : { HostConfig: { AutoRemove: true } };
 
+    const now = performance.now();
+
     const container = await docker.run(image, cmd, process.stdout, options);
     const status = container.output.StatusCode;
 
-    client.gauge(`${name}.status`, status);
+    client.write(
+      { [`scheduler.jobs.${name.replace(/\s/g, '-')}.duration`]: performance.now() - now },
+      error => {
+        if (error) logger.error('Something went wrong!', { error });
+      }
+    );
+
+    client.write({ [`scheduler.jobs.${name.replace(/\s/g, '-')}.status`]: status }, error => {
+      if (error) logger.error('Something went wrong!', { error });
+    });
 
     if (status === 0) {
       logger.info(`Container [${name}] finished and removed.`, {
